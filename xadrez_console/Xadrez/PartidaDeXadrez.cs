@@ -142,6 +142,22 @@ namespace Xadrez
                 throw new TabuleiroException("Você não pode se colocar em xeque!");
             }
 
+            Peca p = tab.peca(destino);
+
+            // #jogadaespecial promocao
+            if(p is Peao)
+            {
+                if((p.Cor == Cor.Branca && destino.Linha == 0) || (p.Cor == Cor.Preta && destino.Linha == 7))
+                {
+                    p = tab.RetiraPeca(destino);
+                    pecas.Remove(p);
+                    Peca dama = new Dama(p.Cor,tab);
+                    tab.ColocarPeca(dama, destino);
+                    pecas.Add(dama);
+                }
+            }
+
+
             if (estaEmXeque(adversaria(jogadorAtual)))
             {
                 xeque = true;
@@ -158,9 +174,7 @@ namespace Xadrez
             else {
                 turno++;
                 mudaJogador(); 
-            }
-
-            Peca p = tab.peca(destino);
+            }            
 
             // #jogadaespecail EnPassant
             if (p is Peao && (destino.Linha == origem.Linha - 2 || destino.Linha == origem.Linha + 2))
